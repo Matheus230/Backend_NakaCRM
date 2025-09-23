@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Table(name = "tb_cliente_interesse")
 public class ClienteInteresse {
 
+    public static Object NivelInteresse;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_interesse")
@@ -28,7 +30,7 @@ public class ClienteInteresse {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "nivel_interesse", length = 20)
-    private NivelInteresse nivelInteresse = NivelInteresse.MEDIO;
+    private NivelInteresse nivelInteresse = com.nakacorp.backend.model.enums.NivelInteresse.MEDIO;
 
     @Column(name = "observacoes", columnDefinition = "TEXT")
     private String observacoes;
