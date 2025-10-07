@@ -124,25 +124,25 @@ public class DashboardService {
 
     public List<Cliente> getLeadsToFollow() {
         LocalDateTime seteDiasAtras = LocalDateTime.now().minus(7, ChronoUnit.DAYS);
+        List<StatusLead> statusAtivos = Arrays.asList(
+            StatusLead.NOVO,
+            StatusLead.CONTATADO,
+            StatusLead.QUALIFICADO
+        );
 
-        return clienteRepository.findAll().stream()
-                .filter(cliente -> cliente.getDataUltimaInteracao() == null ||
-                        cliente.getDataUltimaInteracao().isBefore(seteDiasAtras))
-                .filter(cliente -> cliente.getStatusLead() == StatusLead.NOVO ||
-                        cliente.getStatusLead() == StatusLead.CONTATADO ||
-                        cliente.getStatusLead() == StatusLead.QUALIFICADO)
-                .toList();
+        // Query otimizada - não carrega todos os clientes na memória
+        return clienteRepository.findLeadsToFollow(seteDiasAtras, statusAtivos);
     }
 
     public List<Cliente> getLeadsHotToday() {
         LocalDateTime inicioHoje = LocalDateTime.now().toLocalDate().atStartOfDay();
+        List<StatusLead> statusQuentes = Arrays.asList(
+            StatusLead.QUALIFICADO,
+            StatusLead.OPORTUNIDADE
+        );
 
-        return clienteRepository.findAll().stream()
-                .filter(cliente -> cliente.getStatusLead() == StatusLead.QUALIFICADO ||
-                        cliente.getStatusLead() == StatusLead.OPORTUNIDADE)
-                .filter(cliente -> cliente.getDataUltimaInteracao() != null &&
-                        cliente.getDataUltimaInteracao().isAfter(inicioHoje))
-                .toList();
+        // Query otimizada - não carrega todos os clientes na memória
+        return clienteRepository.findLeadsHotToday(inicioHoje, statusQuentes);
     }
 
     private LeadConversionDto calculateConversionForOrigem(OrigemLead origem) {
