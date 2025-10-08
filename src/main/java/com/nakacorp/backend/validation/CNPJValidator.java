@@ -1,6 +1,5 @@
 package com.nakacorp.backend.validation;
 
-import br.com.caelum.stella.validation.CNPJValidator;
 import br.com.caelum.stella.validation.InvalidStateException;
 
 /**
@@ -17,7 +16,7 @@ import br.com.caelum.stella.validation.InvalidStateException;
 public class CNPJValidator {
 
     private static final br.com.caelum.stella.validation.CNPJValidator validator =
-        new CNPJValidator();
+        new br.com.caelum.stella.validation.CNPJValidator();
 
     /**
      * Valida se um CNPJ é válido.

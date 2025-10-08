@@ -72,7 +72,9 @@ public class ProdutoService {
     }
 
     public ProdutoResponseDto create(ProdutoRequestDto request) {
-        Produto produto = new Produto(request.nome(), request.preco());
+        Produto produto = new Produto();
+        produto.setNome(request.nome());
+        produto.setPreco(request.preco());
         updateProdutoFromRequest(produto, request);
 
         Produto saved = produtoRepository.save(produto);

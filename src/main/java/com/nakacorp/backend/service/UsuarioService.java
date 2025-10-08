@@ -55,15 +55,14 @@ public class UsuarioService {
 
     public UsuarioResponseDto create(UsuarioRequestDto request) {
         if (usuarioRepository.existsByEmail(request.email())) {
-            throw new IllegalArgumentException("Email já cadastrado: " + request.email());
+            throw new IllegalArgumentException("user já cadastrado");
         }
 
-        Usuario usuario = new Usuario(
-                request.nome(),
-                request.email(),
-                passwordEncoder.encode(request.senha()),
-                request.tipoUsuario()
-        );
+        Usuario usuario = new Usuario();
+        usuario.setNome(request.nome());
+        usuario.setEmail(request.email());
+        usuario.setSenhaHash(passwordEncoder.encode(request.senha()));
+        usuario.setTipoUsuario(request.tipoUsuario());
         usuario.setGoogleId(request.googleId());
         usuario.setAtivo(request.ativo());
 
@@ -78,7 +77,7 @@ public class UsuarioService {
         if (request.nome() != null) usuario.setNome(request.nome());
         if (request.email() != null) {
             if (!request.email().equals(usuario.getEmail()) && usuarioRepository.existsByEmail(request.email())) {
-                throw new IllegalArgumentException("Email já cadastrado: " + request.email());
+                throw new IllegalArgumentException("user já cadastrado");
             }
             usuario.setEmail(request.email());
         }

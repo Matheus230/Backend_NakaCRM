@@ -66,10 +66,13 @@ public class ClienteService {
 
     public ClienteResponseDto create(ClienteRequestDto request) {
         if (clienteRepository.existsByEmail(request.email())) {
-            throw new IllegalArgumentException("Cliente já cadastrado com este email: " + request.email());
+            throw new IllegalArgumentException("Cliente já cadastrado");
         }
 
-        Cliente cliente = new Cliente(request.nome(), request.email(), request.origemLead());
+        Cliente cliente = new Cliente();
+        cliente.setNome(request.nome());
+        cliente.setEmail(request.email());
+        cliente.setOrigemLead(request.origemLead());
         updateClienteFromRequest(cliente, request);
 
         Cliente saved = clienteRepository.save(cliente);
@@ -85,7 +88,7 @@ public class ClienteService {
 
         if (request.email() != null && !request.email().equals(cliente.getEmail())) {
             if (clienteRepository.existsByEmail(request.email())) {
-                throw new IllegalArgumentException("Email já cadastrado: " + request.email());
+                throw new IllegalArgumentException("user já cadastrado");
             }
         }
 

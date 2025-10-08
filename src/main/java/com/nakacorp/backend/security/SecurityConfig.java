@@ -44,8 +44,8 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/health/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/health/**").permitAll()
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
@@ -54,11 +54,12 @@ public class SecurityConfig {
                                 "/webjars/**"
                         ).permitAll()
                         .requestMatchers("/actuator/**").hasRole("ADMIN")
-                        .requestMatchers("/api/usuarios/**").hasAnyRole("ADMIN", "VENDEDOR")
-                        .requestMatchers("/api/clientes/**").hasAnyRole("ADMIN", "VENDEDOR")
-                        .requestMatchers("/api/produtos/**").hasAnyRole("ADMIN", "VENDEDOR")
-                        .requestMatchers("/api/interacoes/**").hasAnyRole("ADMIN", "VENDEDOR")
-                        .requestMatchers("/api/dashboard/**").hasAnyRole("ADMIN", "VENDEDOR")
+                        .requestMatchers("/usuarios/**").hasAnyRole("ADMIN", "VENDEDOR")
+                        .requestMatchers("/clientes/**").hasAnyRole("ADMIN", "VENDEDOR")
+                        .requestMatchers("/produtos/**").hasAnyRole("ADMIN", "VENDEDOR")
+                        .requestMatchers("/interacoes/**").hasAnyRole("ADMIN", "VENDEDOR")
+                        .requestMatchers("/dashboard/**").hasAnyRole("ADMIN", "VENDEDOR")
+                        .requestMatchers("/emails/**").hasAnyRole("ADMIN", "VENDEDOR")
 
                         .anyRequest().authenticated()
                 );

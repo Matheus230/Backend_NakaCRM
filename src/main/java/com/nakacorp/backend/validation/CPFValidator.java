@@ -1,6 +1,5 @@
 package com.nakacorp.backend.validation;
 
-import br.com.caelum.stella.validation.CPFValidator;
 import br.com.caelum.stella.validation.InvalidStateException;
 
 /**
@@ -17,7 +16,7 @@ import br.com.caelum.stella.validation.InvalidStateException;
 public class CPFValidator {
 
     private static final br.com.caelum.stella.validation.CPFValidator validator =
-        new CPFValidator();
+        new br.com.caelum.stella.validation.CPFValidator();
 
     /**
      * Valida se um CPF é válido.
