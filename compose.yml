@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   crm-postgres:
     image: postgres:16-alpine
@@ -47,12 +45,16 @@ services:
     container_name: crm-mailhog
     restart: unless-stopped
     ports:
-      - "1025:1025"
-      - "8025:8025"
+      - "1025:1025"  # SMTP server
+      - "8025:8025"  # Web UI
     networks:
       - crm-network
-    profiles:
-      - tools
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8025"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
 
 volumes:
   postgres_data:
