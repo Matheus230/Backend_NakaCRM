@@ -18,6 +18,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller REST para gerenciamento de Envio de Emails
+ * <p>
+ * Permite envio de emails individuais e em massa (broadcast) para clientes.
+ * Suporta diferentes tipos de emails: simples (texto), boas-vindas, follow-up e promocionais.
+ * Todos os emails utilizam templates HTML profissionais e são enviados de forma assíncrona.
+ * </p>
+ *
+ * @author Klleriston Andrade
+ * @version 1.0
+ * @since 1.0
+ */
 @RestController
 @RequestMapping("/emails")
 @Tag(name = "Emails", description = "Gestão de envio de emails para clientes")
@@ -28,6 +40,12 @@ public class EmailController {
     private final EmailService emailService;
     private final ClienteService clienteService;
 
+    /**
+     * Construtor com injeção de dependências dos serviços necessários.
+     *
+     * @param emailService serviço de envio de emails
+     * @param clienteService serviço de gerenciamento de clientes
+     */
     @Autowired
     public EmailController(EmailService emailService, ClienteService clienteService) {
         this.emailService = emailService;
@@ -92,6 +110,57 @@ public class EmailController {
             return ResponseEntity.badRequest()
                     .body(ApiResponseDto.error("Erro no envio em massa: " + e.getMessage()));
         }
+    }
+
+    @PostMapping("/cliente/{clienteId}/boas-vindas")
+    @Operation(summary = "Enviar email de boas-vindas", description = "Envia email de boas-vindas para um cliente específico")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('VENDEDOR')")
+    public ResponseEntity<ApiResponseDto<Void>> enviarBoasVindas(
+            @Parameter(description = "ID do cliente") @PathVariable Long clienteId) {
+
+        return clienteService.findById(clienteId)
+                .map(clienteDto -> {
+                    Cliente cliente = convertDtoToEntity(clienteDto);
+                    emailService.enviarEmailBoasVindas(cliente);
+                    return ResponseEntity.<ApiResponseDto<Void>>ok(ApiResponseDto.success("Email de boas-vindas enviado com sucesso", null));
+                })
+                .orElse(ResponseEntity.status(404)
+                        .body(ApiResponseDto.<Void>error("Cliente não encontrado")));
+    }
+
+    @PostMapping("/cliente/{clienteId}/follow-up")
+    @Operation(summary = "Enviar email de follow-up", description = "Envia email de follow-up para um cliente específico")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('VENDEDOR')")
+    public ResponseEntity<ApiResponseDto<Void>> enviarFollowUp(
+            @Parameter(description = "ID do cliente") @PathVariable Long clienteId,
+            @Parameter(description = "Mensagem personalizada") @RequestParam @NotBlank String mensagemPersonalizada) {
+
+        return clienteService.findById(clienteId)
+                .map(clienteDto -> {
+                    Cliente cliente = convertDtoToEntity(clienteDto);
+                    emailService.enviarEmailFollowUp(cliente, mensagemPersonalizada);
+                    return ResponseEntity.<ApiResponseDto<Void>>ok(ApiResponseDto.success("Email de follow-up enviado com sucesso", null));
+                })
+                .orElse(ResponseEntity.status(404)
+                        .body(ApiResponseDto.<Void>error("Cliente não encontrado")));
+    }
+
+    @PostMapping("/cliente/{clienteId}/promocional")
+    @Operation(summary = "Enviar email promocional", description = "Envia email promocional para um cliente específico")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('VENDEDOR')")
+    public ResponseEntity<ApiResponseDto<Void>> enviarPromocional(
+            @Parameter(description = "ID do cliente") @PathVariable Long clienteId,
+            @Parameter(description = "Título do produto/promoção") @RequestParam @NotBlank String tituloProduto,
+            @Parameter(description = "Descrição da promoção") @RequestParam @NotBlank String descricao) {
+
+        return clienteService.findById(clienteId)
+                .map(clienteDto -> {
+                    Cliente cliente = convertDtoToEntity(clienteDto);
+                    emailService.enviarEmailPromocional(cliente, tituloProduto, descricao);
+                    return ResponseEntity.<ApiResponseDto<Void>>ok(ApiResponseDto.success("Email promocional enviado com sucesso", null));
+                })
+                .orElse(ResponseEntity.status(404)
+                        .body(ApiResponseDto.<Void>error("Cliente não encontrado")));
     }
 
     private Cliente convertDtoToEntity(com.nakacorp.backend.dto.res.ClienteResponseDto clienteDto) {

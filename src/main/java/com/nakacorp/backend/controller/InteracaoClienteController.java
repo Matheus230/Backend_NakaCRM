@@ -28,6 +28,19 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Controller REST para gerenciamento de Interações com Clientes
+ * <p>
+ * Gerencia o histórico completo de interações entre a equipe e os clientes,
+ * incluindo emails, ligações telefônicas, reuniões, whatsapp e outros tipos de contato.
+ * Fornece timeline de atividades por cliente, estatísticas de interações,
+ * filtros por tipo, período e usuário. Essencial para rastreabilidade e follow-up.
+ * </p>
+ *
+ * @author Klleriston Andrade
+ * @version 1.0
+ * @since 1.0
+ */
 @RestController
 @RequestMapping("/interacoes")
 @Tag(name = "Interações", description = "Gestão da timeline de interações com clientes")
@@ -37,6 +50,11 @@ public class InteracaoClienteController {
 
     private final InteracaoClienteService interacaoService;
 
+    /**
+     * Construtor com injeção de dependência do serviço de interações.
+     *
+     * @param interacaoService serviço de gerenciamento de interações com clientes
+     */
     @Autowired
     public InteracaoClienteController(InteracaoClienteService interacaoService) {
         this.interacaoService = interacaoService;

@@ -23,6 +23,19 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller REST para gerenciamento de Usuários do Sistema
+ * <p>
+ * Gerencia os usuários que têm acesso ao sistema CRM, incluindo
+ * administradores e vendedores. Controla criação, atualização,
+ * ativação/desativação e exclusão de contas de usuário.
+ * Acesso restrito a administradores para operações sensíveis.
+ * </p>
+ *
+ * @author Klleriston Andrade
+ * @version 1.0
+ * @since 1.0
+ */
 @RestController
 @RequestMapping("/usuarios")
 @Tag(name = "Usuários", description = "Gestão de usuários do sistema")
@@ -32,6 +45,11 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
+    /**
+     * Construtor com injeção de dependência do serviço de usuários.
+     *
+     * @param usuarioService serviço de gerenciamento de usuários do sistema
+     */
     @Autowired
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;

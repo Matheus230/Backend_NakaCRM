@@ -18,6 +18,19 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Controller REST para Dashboard e Métricas do CRM
+ * <p>
+ * Fornece endpoints para visualização de estatísticas gerais do sistema,
+ * incluindo taxas de conversão, leads por status, análise de origem,
+ * e identificação de leads prioritários (quentes e para follow-up).
+ * Essencial para tomada de decisões e acompanhamento de performance.
+ * </p>
+ *
+ * @author Klleriston Andrade
+ * @version 1.0
+ * @since 1.0
+ */
 @RestController
 @RequestMapping("/dashboard")
 @Tag(name = "Dashboard", description = "Estatísticas e métricas do sistema CRM")
@@ -27,6 +40,11 @@ public class DashboardController {
 
     private final DashboardService dashboardService;
 
+    /**
+     * Construtor com injeção de dependência do serviço de dashboard.
+     *
+     * @param dashboardService serviço de estatísticas e métricas
+     */
     @Autowired
     public DashboardController(DashboardService dashboardService) {
         this.dashboardService = dashboardService;

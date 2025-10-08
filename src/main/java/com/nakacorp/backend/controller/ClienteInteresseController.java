@@ -25,6 +25,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller REST para gerenciamento de Interesses dos Clientes em Produtos
+ * <p>
+ * Permite rastrear e gerenciar o interesse dos clientes em produtos/serviços específicos,
+ * incluindo o nível de interesse (BAIXO, MEDIO, ALTO) e observações relevantes.
+ * Útil para priorização de vendas e análise de produtos mais desejados.
+ * </p>
+ *
+ * @author Klleriston Andrade
+ * @version 1.0
+ * @since 1.0
+ */
 @RestController
 @RequestMapping("/cliente-interesses")
 @Tag(name = "Interesses", description = "Gestão de interesses dos clientes por produtos")
@@ -34,6 +46,11 @@ public class ClienteInteresseController {
 
     private final ClienteInteresseService interesseService;
 
+    /**
+     * Construtor com injeção de dependência do serviço de interesses.
+     *
+     * @param interesseService serviço de gerenciamento de interesses
+     */
     @Autowired
     public ClienteInteresseController(ClienteInteresseService interesseService) {
         this.interesseService = interesseService;

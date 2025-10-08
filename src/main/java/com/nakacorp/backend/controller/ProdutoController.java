@@ -26,6 +26,19 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Controller REST para gerenciamento de Produtos e Serviços
+ * <p>
+ * Gerencia o catálogo de produtos e serviços oferecidos pela empresa.
+ * Suporta categorização, precificação, ativação/desativação de produtos,
+ * filtros por categoria e faixa de preço, além de estatísticas de interesse
+ * dos clientes por produto. Essencial para gestão de vendas e CRM.
+ * </p>
+ *
+ * @author Klleriston Andrade
+ * @version 1.0
+ * @since 1.0
+ */
 @RestController
 @RequestMapping("/produtos")
 @Tag(name = "Produtos", description = "Gestão de produtos e serviços")
@@ -35,6 +48,11 @@ public class ProdutoController {
 
     private final ProdutoService produtoService;
 
+    /**
+     * Construtor com injeção de dependência do serviço de produtos.
+     *
+     * @param produtoService serviço de gerenciamento de produtos e serviços
+     */
     @Autowired
     public ProdutoController(ProdutoService produtoService) {
         this.produtoService = produtoService;

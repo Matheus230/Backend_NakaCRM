@@ -24,6 +24,19 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller REST para gerenciamento de Origens de Leads e Tracking UTM
+ * <p>
+ * Gerencia as origens dos leads capturados pelo sistema, incluindo rastreamento
+ * completo de parâmetros UTM (source, medium, campaign, term, content).
+ * Fornece analytics detalhado de performance por origem, identificação de canais
+ * mais efetivos e análise de ROI de campanhas de marketing.
+ * </p>
+ *
+ * @author Klleriston Andrade
+ * @version 1.0
+ * @since 1.0
+ */
 @RestController
 @RequestMapping("/lead-origens")
 @Tag(name = "Lead Origens", description = "Gestão de origens e tracking UTM dos leads")
@@ -33,6 +46,11 @@ public class LeadOrigemController {
 
     private final LeadOrigemService leadOrigemService;
 
+    /**
+     * Construtor com injeção de dependência do serviço de origens de leads.
+     *
+     * @param leadOrigemService serviço de gerenciamento de origens e tracking UTM
+     */
     @Autowired
     public LeadOrigemController(LeadOrigemService leadOrigemService) {
         this.leadOrigemService = leadOrigemService;

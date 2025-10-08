@@ -4,6 +4,7 @@ package com.nakacorp.backend.controller;
 import com.nakacorp.backend.dto.res.ApiResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,24 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Controller REST para Health Check e Status da Aplicação
+ * <p>
+ * Fornece endpoints públicos para verificação da saúde da aplicação,
+ * incluindo status básico, verificação detalhada de dependências (banco de dados),
+ * informações de versão e build, e métricas do sistema (memória, processadores).
+ * Útil para monitoramento, troubleshooting e integração com ferramentas de observabilidade.
+ * </p>
+ *
+ * @author Klleriston Andrade
+ * @version 1.0
+ * @since 1.0
+ */
 @RestController
 @RequestMapping("/health")
 @Tag(name = "Health Check", description = "Endpoints para verificação de saúde da aplicação")
 @CrossOrigin(origins = "*")
+@PermitAll
 public class HealthController {
 
     @Autowired(required = false)
