@@ -358,15 +358,27 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 | POST | `/auth/register` | Registro | ❌ |
 | POST | `/auth/refresh` | Refresh token | ✅ |
 | **Clientes** ||||
-| GET | `/clientes` | Listar clientes | ✅ |
-| GET | `/clientes/{id}` | Buscar por ID | ✅ |
-| POST | `/clientes` | Criar cliente | ✅ |
-| PUT | `/clientes/{id}` | Atualizar cliente | ✅ |
-| PATCH | `/clientes/{id}/status` | Atualizar status | ✅ |
+| GET | `/clientes` | Listar clientes com paginação | ✅ |
+| GET | `/clientes/{id}` | Buscar cliente por ID | ✅ |
+| GET | `/clientes/status/{status}` | Filtrar por status do lead | ✅ |
+| POST | `/clientes` | Criar novo cliente | ✅ |
+| PUT | `/clientes/{id}` | Atualizar cliente completo | ✅ |
+| PATCH | `/clientes/{id}/status` | Atualizar apenas status | ✅ |
 | DELETE | `/clientes/{id}` | Deletar cliente | ✅ ADMIN |
+| **Emails** ||||
+| POST | `/emails/enviar-simples` | Enviar email de texto simples | ✅ |
+| POST | `/emails/cliente/{id}/boas-vindas` | Enviar boas-vindas individual | ✅ |
+| POST | `/emails/cliente/{id}/follow-up` | Enviar follow-up individual | ✅ |
+| POST | `/emails/cliente/{id}/promocional` | Enviar email promocional | ✅ |
+| POST | `/emails/broadcast/boas-vindas` | Broadcast boas-vindas | ✅ ADMIN |
+| POST | `/emails/broadcast/follow-up` | Broadcast follow-up | ✅ ADMIN |
 | **Produtos** ||||
 | GET | `/produtos` | Listar produtos | ✅ |
-| POST | `/produtos` | Criar produto | ✅ |
+| GET | `/produtos/{id}` | Buscar produto por ID | ✅ |
+| GET | `/produtos/categoria/{categoria}` | Filtrar por categoria | ✅ |
+| POST | `/produtos` | Criar produto | ✅ ADMIN |
+| PUT | `/produtos/{id}` | Atualizar produto | ✅ ADMIN |
+| DELETE | `/produtos/{id}` | Deletar produto | ✅ ADMIN |
 | **Dashboard** ||||
 | GET | `/dashboard/stats` | Estatísticas gerais | ✅ |
 | GET | `/dashboard/conversion-rate` | Taxa de conversão | ✅ |
@@ -396,6 +408,34 @@ curl -X POST http://localhost:8080/api/clientes \
 # Com paginação e ordenação
 curl -X GET "http://localhost:8080/api/clientes?page=0&size=10&sortBy=createdAt&sortDirection=DESC" \
   -H "Authorization: Bearer $TOKEN"
+
+# Filtrar por status
+curl -X GET "http://localhost:8080/api/clientes/status/NOVO" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+#### Atualizar Status do Cliente
+
+```bash
+curl -X PATCH "http://localhost:8080/api/clientes/1/status?novoStatus=QUALIFICADO" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+#### Enviar Email para Cliente
+
+```bash
+# Enviar email de boas-vindas
+curl -X POST "http://localhost:8080/api/emails/cliente/1/boas-vindas" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Enviar email de follow-up
+curl -X POST "http://localhost:8080/api/emails/cliente/1/follow-up?mensagemPersonalizada=Gostaria%20de%20agendar%20uma%20reunião" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Enviar email promocional
+curl -X POST "http://localhost:8080/api/emails/cliente/1/promocional" \
+  -H "Authorization: Bearer $TOKEN" \
+  -d "tituloProduto=Plano Premium&descricao=50% de desconto na primeira mensalidade"
 ```
 
 ---
