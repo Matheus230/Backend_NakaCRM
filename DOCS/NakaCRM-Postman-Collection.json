@@ -1,0 +1,1965 @@
+{
+	"info": {
+		"_postman_id": "nakaCRM-collection-2025",
+		"name": "NakaCRM API",
+		"description": "Backend do Sistema CRM - Gestão de Leads e Clientes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"item": [
+		{
+			"name": "Autenticação",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.success && response.data) {",
+									"        pm.environment.set('access_token', response.data.accessToken);",
+									"        pm.environment.set('refresh_token', response.data.refreshToken);",
+									"        console.log('Tokens salvos com sucesso!');",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@nakacorp.com\",\n  \"senha\": \"senha123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Autentica um usuário e retorna tokens JWT (access e refresh)"
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar Usuário",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.success && response.data) {",
+									"        pm.environment.set('access_token', response.data.accessToken);",
+									"        pm.environment.set('refresh_token', response.data.refreshToken);",
+									"        console.log('Usuário registrado e tokens salvos com sucesso!');",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao@exemplo.com\",\n  \"senha\": \"senha123\",\n  \"tipoUsuario\": \"VENDEDOR\",\n  \"ativo\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						},
+						"description": "Cria uma nova conta de usuário e retorna tokens JWT"
+					},
+					"response": []
+				},
+				{
+					"name": "Renovar Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.success && response.data) {",
+									"        pm.environment.set('access_token', response.data.accessToken);",
+									"        console.log('Token renovado com sucesso!');",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						},
+						"description": "Renova o access token usando o refresh token"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						},
+						"description": "Realiza o logout do usuário e limpa o contexto de segurança"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints de autenticação e registro de usuários"
+		},
+		{
+			"name": "Clientes",
+			"item": [
+				{
+					"name": "Listar Clientes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clientes?page=0&size=20&sortBy=nome&sortDirection=asc",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clientes"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								},
+								{
+									"key": "sortBy",
+									"value": "nome"
+								},
+								{
+									"key": "sortDirection",
+									"value": "asc"
+								}
+							]
+						},
+						"description": "Lista todos os clientes com paginação e ordenação"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Cliente por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clientes/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clientes",
+								"1"
+							]
+						},
+						"description": "Busca um cliente específico pelo ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar por Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clientes/status/NOVO",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clientes",
+								"status",
+								"NOVO"
+							]
+						},
+						"description": "Filtra clientes por status do lead. Valores: NOVO, CONTATADO, QUALIFICADO, OPORTUNIDADE, CLIENTE, PERDIDO"
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Cliente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Maria Santos\",\n  \"email\": \"maria@exemplo.com\",\n  \"telefone\": \"(11) 98765-4321\",\n  \"endereco\": \"Rua Exemplo, 123\",\n  \"cidade\": \"São Paulo\",\n  \"estado\": \"SP\",\n  \"cep\": \"01234-567\",\n  \"empresa\": \"Empresa XYZ\",\n  \"cargo\": \"Gerente\",\n  \"origemLead\": \"LANDING_PAGE\",\n  \"statusLead\": \"NOVO\",\n  \"observacoes\": \"Cliente interessado em produtos premium\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/clientes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clientes"
+							]
+						},
+						"description": "Cria um novo cliente/lead no sistema"
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Cliente",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Maria Santos Silva\",\n  \"telefone\": \"(11) 91234-5678\",\n  \"cargo\": \"Diretora\",\n  \"statusLead\": \"QUALIFICADO\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/clientes/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clientes",
+								"1"
+							]
+						},
+						"description": "Atualiza dados de um cliente existente"
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Status",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clientes/1/status?novoStatus=CLIENTE",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clientes",
+								"1",
+								"status"
+							],
+							"query": [
+								{
+									"key": "novoStatus",
+									"value": "CLIENTE"
+								}
+							]
+						},
+						"description": "Atualiza apenas o status do lead"
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir Cliente",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clientes/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clientes",
+								"1"
+							]
+						},
+						"description": "Remove um cliente do sistema (apenas ADMIN)"
+					},
+					"response": []
+				}
+			],
+			"description": "Gestão completa de clientes e leads"
+		},
+		{
+			"name": "Emails",
+			"item": [
+				{
+					"name": "Enviar Email Simples",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/emails/enviar-simples?destinatario=cliente@exemplo.com&assunto=Teste&mensagem=Olá, este é um teste",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"emails",
+								"enviar-simples"
+							],
+							"query": [
+								{
+									"key": "destinatario",
+									"value": "cliente@exemplo.com"
+								},
+								{
+									"key": "assunto",
+									"value": "Teste"
+								},
+								{
+									"key": "mensagem",
+									"value": "Olá, este é um teste"
+								}
+							]
+						},
+						"description": "Envia um email de texto simples"
+					},
+					"response": []
+				},
+				{
+					"name": "Enviar Boas-Vindas (Individual)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/emails/cliente/1/boas-vindas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"emails",
+								"cliente",
+								"1",
+								"boas-vindas"
+							]
+						},
+						"description": "Envia email de boas-vindas para um cliente específico"
+					},
+					"response": []
+				},
+				{
+					"name": "Enviar Follow-up (Individual)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/emails/cliente/1/follow-up?mensagemPersonalizada=Gostaria de agendar uma reunião para apresentar nossos produtos",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"emails",
+								"cliente",
+								"1",
+								"follow-up"
+							],
+							"query": [
+								{
+									"key": "mensagemPersonalizada",
+									"value": "Gostaria de agendar uma reunião para apresentar nossos produtos"
+								}
+							]
+						},
+						"description": "Envia email de follow-up personalizado para um cliente"
+					},
+					"response": []
+				},
+				{
+					"name": "Enviar Promocional (Individual)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/emails/cliente/1/promocional?tituloProduto=Plano Premium&descricao=50% de desconto na primeira mensalidade. Aproveite!",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"emails",
+								"cliente",
+								"1",
+								"promocional"
+							],
+							"query": [
+								{
+									"key": "tituloProduto",
+									"value": "Plano Premium"
+								},
+								{
+									"key": "descricao",
+									"value": "50% de desconto na primeira mensalidade. Aproveite!"
+								}
+							]
+						},
+						"description": "Envia email promocional para um cliente"
+					},
+					"response": []
+				},
+				{
+					"name": "Broadcast Boas-Vindas",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[1, 2, 3, 4, 5]"
+						},
+						"url": {
+							"raw": "{{base_url}}/emails/broadcast/boas-vindas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"emails",
+								"broadcast",
+								"boas-vindas"
+							]
+						},
+						"description": "Envia emails de boas-vindas para múltiplos clientes (ADMIN only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Broadcast Follow-up",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[1, 2, 3, 4, 5]"
+						},
+						"url": {
+							"raw": "{{base_url}}/emails/broadcast/follow-up?mensagemPersonalizada=Não se esqueça de nossos produtos incríveis!",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"emails",
+								"broadcast",
+								"follow-up"
+							],
+							"query": [
+								{
+									"key": "mensagemPersonalizada",
+									"value": "Não se esqueça de nossos produtos incríveis!"
+								}
+							]
+						},
+						"description": "Envia emails de follow-up para múltiplos clientes (ADMIN only)"
+					},
+					"response": []
+				},
+				{
+					"name": "Broadcast Promocional",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[1, 2, 3, 4, 5]"
+						},
+						"url": {
+							"raw": "{{base_url}}/emails/broadcast/promocional?tituloProduto=Plano Premium&descricao=50% de desconto. Aproveite!",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"emails",
+								"broadcast",
+								"promocional"
+							],
+							"query": [
+								{
+									"key": "tituloProduto",
+									"value": "Plano Premium"
+								},
+								{
+									"key": "descricao",
+									"value": "50% de desconto. Aproveite!"
+								}
+							]
+						},
+						"description": "Envia emails promocionais para múltiplos clientes (ADMIN only)"
+					},
+					"response": []
+				}
+			],
+			"description": "Envio de emails para clientes (individual e broadcast)"
+		},
+		{
+			"name": "Usuários",
+			"item": [
+				{
+					"name": "Listar Usuários",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/usuarios?page=0&size=20&sortBy=createdAt&sortDirection=desc",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usuarios"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								},
+								{
+									"key": "sortBy",
+									"value": "createdAt"
+								},
+								{
+									"key": "sortDirection",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Usuário por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/usuarios/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usuarios",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Usuário",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Maria Santos\",\n  \"email\": \"maria@exemplo.com\",\n  \"senha\": \"senha123\",\n  \"tipoUsuario\": \"ADMIN\",\n  \"ativo\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/usuarios",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Usuário",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Maria Santos Atualizada\",\n  \"tipoUsuario\": \"VENDEDOR\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/usuarios/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usuarios",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir Usuário",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/usuarios/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"usuarios",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Produtos",
+			"item": [
+				{
+					"name": "Listar Produtos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/produtos?page=0&size=20&sortBy=nome&sortDirection=asc&apenasAtivos=false",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"produtos"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								},
+								{
+									"key": "sortBy",
+									"value": "nome"
+								},
+								{
+									"key": "sortDirection",
+									"value": "asc"
+								},
+								{
+									"key": "apenasAtivos",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Categorias",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/produtos/categorias",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"produtos",
+								"categorias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar por Categoria",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/produtos/categoria/Software",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"produtos",
+								"categoria",
+								"Software"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar por Faixa de Preço",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/produtos/preco?precoMin=100&precoMax=1000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"produtos",
+								"preco"
+							],
+							"query": [
+								{
+									"key": "precoMin",
+									"value": "100"
+								},
+								{
+									"key": "precoMax",
+									"value": "1000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Produto por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/produtos/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"produtos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Estatísticas de Interesse",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/produtos/1/interesse-stats",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"produtos",
+								"1",
+								"interesse-stats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Produto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Plano Premium\",\n  \"descricao\": \"Acesso completo a todas as funcionalidades\",\n  \"preco\": 299.90,\n  \"categoria\": \"Software\",\n  \"ativo\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/produtos",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Produto",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Plano Premium Plus\",\n  \"preco\": 399.90\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/produtos/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"produtos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alternar Status Ativo",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/produtos/1/toggle-ativo",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"produtos",
+								"1",
+								"toggle-ativo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir Produto",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/produtos/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"produtos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Gestão de produtos e serviços"
+		},
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "Estatísticas Gerais",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/dashboard/stats",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dashboard",
+								"stats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Estatísticas por Período",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/dashboard/stats/periodo?inicio=2025-01-01T00:00:00&fim=2025-12-31T23:59:59",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dashboard",
+								"stats",
+								"periodo"
+							],
+							"query": [
+								{
+									"key": "inicio",
+									"value": "2025-01-01T00:00:00"
+								},
+								{
+									"key": "fim",
+									"value": "2025-12-31T23:59:59"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Taxa de Conversão Geral",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/dashboard/conversion-rate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dashboard",
+								"conversion-rate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Taxa de Conversão Último Mês",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/dashboard/conversion-rate/last-month",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dashboard",
+								"conversion-rate",
+								"last-month"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Conversão por Origem",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/dashboard/conversion/by-origem",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dashboard",
+								"conversion",
+								"by-origem"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Leads para Follow-up",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/dashboard/leads/follow-up",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dashboard",
+								"leads",
+								"follow-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Leads Quentes Hoje",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/dashboard/leads/hot-today",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"dashboard",
+								"leads",
+								"hot-today"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Estatísticas e métricas do sistema CRM"
+		},
+		{
+			"name": "Cliente Interesses",
+			"item": [
+				{
+					"name": "Listar Interesses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cliente-interesses?page=0&size=20&sortBy=createdAt&sortDirection=desc",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cliente-interesses"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								},
+								{
+									"key": "sortBy",
+									"value": "createdAt"
+								},
+								{
+									"key": "sortDirection",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Interesses por Cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cliente-interesses/cliente/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cliente-interesses",
+								"cliente",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Interesses por Produto",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cliente-interesses/produto/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cliente-interesses",
+								"produto",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Interesses por Nível",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cliente-interesses/nivel/ALTO",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cliente-interesses",
+								"nivel",
+								"ALTO"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clientes com Interesse Alto",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cliente-interesses/interesse-alto",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cliente-interesses",
+								"interesse-alto"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Produtos Mais Desejados",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cliente-interesses/produtos-mais-desejados",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cliente-interesses",
+								"produtos-mais-desejados"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Interesse Específico",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cliente-interesses/cliente/1/produto/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cliente-interesses",
+								"cliente",
+								"1",
+								"produto",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Interesse por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cliente-interesses/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cliente-interesses",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Interesse",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"clienteId\": 1,\n  \"produtoId\": 1,\n  \"nivelInteresse\": \"ALTO\",\n  \"observacoes\": \"Cliente muito interessado\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/cliente-interesses",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cliente-interesses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Interesse",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nivelInteresse\": \"MEDIO\",\n  \"observacoes\": \"Interesse diminuiu\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/cliente-interesses/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cliente-interesses",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir Interesse",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cliente-interesses/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cliente-interesses",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Gestão de interesses dos clientes por produtos"
+		},
+		{
+			"name": "Interações",
+			"item": [
+				{
+					"name": "Listar Interações",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/interacoes?page=0&size=20&sortBy=createdAt&sortDirection=desc",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"interacoes"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								},
+								{
+									"key": "sortBy",
+									"value": "createdAt"
+								},
+								{
+									"key": "sortDirection",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Timeline do Cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/interacoes/cliente/1/timeline",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"interacoes",
+								"cliente",
+								"1",
+								"timeline"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Interações por Usuário",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/interacoes/usuario/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"interacoes",
+								"usuario",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Interações por Tipo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/interacoes/tipo/EMAIL",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"interacoes",
+								"tipo",
+								"EMAIL"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Interações por Período",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/interacoes/periodo?inicio=2025-01-01T00:00:00&fim=2025-12-31T23:59:59",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"interacoes",
+								"periodo"
+							],
+							"query": [
+								{
+									"key": "inicio",
+									"value": "2025-01-01T00:00:00"
+								},
+								{
+									"key": "fim",
+									"value": "2025-12-31T23:59:59"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Estatísticas de Interações",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/interacoes/stats",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"interacoes",
+								"stats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Interação por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/interacoes/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"interacoes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Interação",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"clienteId\": 1,\n  \"usuarioId\": 1,\n  \"tipo\": \"REUNIAO\",\n  \"descricao\": \"Reunião de apresentação de produtos\",\n  \"observacoes\": \"Cliente muito interessado\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/interacoes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"interacoes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar Email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/interacoes/email?clienteId=1&assunto=Proposta Comercial&remetente=vendas@nakacorp.com&usuarioId=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"interacoes",
+								"email"
+							],
+							"query": [
+								{
+									"key": "clienteId",
+									"value": "1"
+								},
+								{
+									"key": "assunto",
+									"value": "Proposta Comercial"
+								},
+								{
+									"key": "remetente",
+									"value": "vendas@nakacorp.com"
+								},
+								{
+									"key": "usuarioId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar Ligação",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/interacoes/telefone?clienteId=1&numeroTelefone=(11)98765-4321&duracao=15min&usuarioId=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"interacoes",
+								"telefone"
+							],
+							"query": [
+								{
+									"key": "clienteId",
+									"value": "1"
+								},
+								{
+									"key": "numeroTelefone",
+									"value": "(11)98765-4321"
+								},
+								{
+									"key": "duracao",
+									"value": "15min"
+								},
+								{
+									"key": "usuarioId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Interação",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"descricao\": \"Reunião finalizada com sucesso\",\n  \"observacoes\": \"Cliente fechou contrato\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/interacoes/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"interacoes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir Interação",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/interacoes/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"interacoes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Gestão da timeline de interações com clientes"
+		},
+		{
+			"name": "Lead Origens",
+			"item": [
+				{
+					"name": "Listar Origens de Leads",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lead-origens?page=0&size=20&sortBy=createdAt&sortDirection=desc",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lead-origens"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "20"
+								},
+								{
+									"key": "sortBy",
+									"value": "createdAt"
+								},
+								{
+									"key": "sortDirection",
+									"value": "desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Origem por Cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lead-origens/cliente/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lead-origens",
+								"cliente",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Leads por UTM Source",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lead-origens/utm-source/google",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lead-origens",
+								"utm-source",
+								"google"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar UTM Sources",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lead-origens/utm-sources",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lead-origens",
+								"utm-sources"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Analytics UTM",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lead-origens/analytics/utm",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lead-origens",
+								"analytics",
+								"utm"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Analytics de Campanhas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lead-origens/analytics/utm/google/campaigns",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lead-origens",
+								"analytics",
+								"utm",
+								"google",
+								"campaigns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Origem por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lead-origens/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lead-origens",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Origem",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"clienteId\": 1,\n  \"utmSource\": \"google\",\n  \"utmMedium\": \"cpc\",\n  \"utmCampaign\": \"campanha_verao\",\n  \"utmTerm\": \"crm software\",\n  \"utmContent\": \"anuncio_a\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/lead-origens",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lead-origens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Origem",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"utmCampaign\": \"campanha_inverno\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/lead-origens/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lead-origens",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir Origem",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/lead-origens/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"lead-origens",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Gestão de origens e tracking UTM dos leads"
+		},
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "Health",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Database Health",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health/database",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health",
+								"database"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080/api",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
