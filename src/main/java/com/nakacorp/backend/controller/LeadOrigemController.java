@@ -41,7 +41,6 @@ import java.util.List;
 @RequestMapping("/lead-origens")
 @Tag(name = "Lead Origens", description = "Gestão de origens e tracking UTM dos leads")
 @SecurityRequirement(name = "bearer-jwt")
-@CrossOrigin(origins = "*")
 public class LeadOrigemController {
 
     private final LeadOrigemService leadOrigemService;

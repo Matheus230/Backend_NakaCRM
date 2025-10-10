@@ -34,7 +34,6 @@ import java.util.List;
 @RequestMapping("/emails")
 @Tag(name = "Emails", description = "Gestão de envio de emails para clientes")
 @SecurityRequirement(name = "bearer-jwt")
-@CrossOrigin(origins = "*")
 public class EmailController {
 
     private final EmailService emailService;

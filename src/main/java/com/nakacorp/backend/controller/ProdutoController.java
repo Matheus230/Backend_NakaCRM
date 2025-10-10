@@ -43,7 +43,6 @@ import java.util.List;
 @RequestMapping("/produtos")
 @Tag(name = "Produtos", description = "Gestão de produtos e serviços")
 @SecurityRequirement(name = "bearer-jwt")
-@CrossOrigin(origins = "*")
 public class ProdutoController {
 
     private final ProdutoService produtoService;

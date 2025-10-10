@@ -40,7 +40,6 @@ import java.util.List;
 @RequestMapping("/usuarios")
 @Tag(name = "Usuários", description = "Gestão de usuários do sistema")
 @SecurityRequirement(name = "bearer-jwt")
-@CrossOrigin(origins = "*")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;

@@ -72,38 +72,6 @@ api.interceptors.response.use(
 
 export default api;
 ```
-
-### Fetch API Setup (Vanilla JS)
-
-```javascript
-// services/api.js
-const BASE_URL = 'http://localhost:8080/api';
-
-async function fetchAPI(endpoint, options = {}) {
-  const token = localStorage.getItem('access_token');
-
-  const config = {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
-      ...options.headers,
-    },
-  };
-
-  const response = await fetch(`${BASE_URL}${endpoint}`, config);
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || 'Erro na requisição');
-  }
-
-  return data;
-}
-
-export default fetchAPI;
-```
-
 ---
 
 ## 🔐 Autenticação
@@ -158,62 +126,6 @@ export function isAuthenticated(): boolean {
   return !!localStorage.getItem('access_token');
 }
 ```
-
-### Exemplo de Uso no React
-
-```tsx
-// components/LoginForm.tsx
-import { useState } from 'react';
-import { login } from '../services/authService';
-import { useNavigate } from 'react-router-dom';
-
-export function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    try {
-      await login({ email, senha });
-      navigate('/dashboard');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao fazer login');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-        required
-      />
-      <input
-        type="password"
-        value={senha}
-        onChange={(e) => setSenha(e.target.value)}
-        placeholder="Senha"
-        required
-      />
-      {error && <p className="error">{error}</p>}
-      <button type="submit" disabled={loading}>
-        {loading ? 'Entrando...' : 'Entrar'}
-      </button>
-    </form>
-  );
-}
-```
-
 ---
 
 ## 👥 Clientes (CRUD)

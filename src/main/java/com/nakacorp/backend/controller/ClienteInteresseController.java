@@ -41,7 +41,6 @@ import java.util.List;
 @RequestMapping("/cliente-interesses")
 @Tag(name = "Interesses", description = "Gestão de interesses dos clientes por produtos")
 @SecurityRequirement(name = "bearer-jwt")
-@CrossOrigin(origins = "*")
 public class ClienteInteresseController {
 
     private final ClienteInteresseService interesseService;

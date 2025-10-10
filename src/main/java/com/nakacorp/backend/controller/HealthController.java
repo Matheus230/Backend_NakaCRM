@@ -32,7 +32,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/health")
 @Tag(name = "Health Check", description = "Endpoints para verificação de saúde da aplicação")
-@CrossOrigin(origins = "*")
 @PermitAll
 public class HealthController {
 

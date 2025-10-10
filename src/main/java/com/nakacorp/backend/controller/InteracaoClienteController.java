@@ -45,7 +45,6 @@ import java.util.List;
 @RequestMapping("/interacoes")
 @Tag(name = "Interações", description = "Gestão da timeline de interações com clientes")
 @SecurityRequirement(name = "bearer-jwt")
-@CrossOrigin(origins = "*")
 public class InteracaoClienteController {
 
     private final InteracaoClienteService interacaoService;

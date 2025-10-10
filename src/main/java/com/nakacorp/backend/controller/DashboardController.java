@@ -35,7 +35,6 @@ import java.util.List;
 @RequestMapping("/dashboard")
 @Tag(name = "Dashboard", description = "Estatísticas e métricas do sistema CRM")
 @SecurityRequirement(name = "bearer-jwt")
-@CrossOrigin(origins = "*")
 public class DashboardController {
 
     private final DashboardService dashboardService;
