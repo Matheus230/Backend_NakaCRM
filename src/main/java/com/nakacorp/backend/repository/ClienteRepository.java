@@ -29,6 +29,8 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     Optional<Cliente> findByEmail(String email);
 
+    boolean existsByEmail(String email);
+
     List<Cliente> findByStatusLead(StatusLead statusLead);
 
     List<Cliente> findByOrigemLead(OrigemLead origemLead);
@@ -75,6 +77,4 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     @Query("SELECT COUNT(c) FROM Cliente c WHERE c.statusLead = :status")
     long countByStatusLead(@Param("status") StatusLead status);
-
-    boolean existsByEmail(String email);
 }

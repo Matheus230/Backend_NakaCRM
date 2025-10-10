@@ -29,4 +29,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     @Query("SELECT DISTINCT p.categoria FROM Produto p WHERE p.ativo = true ORDER BY p.categoria")
     List<String> findDistinctCategorias();
+
+    boolean existsByNome(String nome);
 }
