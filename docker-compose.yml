@@ -62,12 +62,10 @@ services:
     ports:
       - "8080:8080"
     environment:
-      # Database
-      DB_HOST: crm-postgres
-      DB_PORT: 5432
-      DB_NAME: ${DB_NAME:-crm_db}
-      DB_USER: ${DB_USER:-crm_user}
-      DB_PASSWORD: ${DB_PASSWORD:-crm_password}
+      # Database - Spring Boot properties format
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOST:-crm-postgres}:${DB_PORT:-5432}/${DB_NAME:-crm_db}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER:-crm_user}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-crm_password}
 
       # JWT
       JWT_SECRET: ${JWT_SECRET}
@@ -78,18 +76,16 @@ services:
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:5173}
 
       # Email
-      MAIL_HOST: ${MAIL_HOST:-mailhog}
-      MAIL_PORT: ${MAIL_PORT:-1025}
-      MAIL_USERNAME: ${MAIL_USERNAME:-}
-      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
-      MAIL_SMTP_AUTH: ${MAIL_SMTP_AUTH:-false}
-      MAIL_STARTTLS: ${MAIL_STARTTLS:-false}
+      SPRING_MAIL_HOST: ${MAIL_HOST:-mailhog}
+      SPRING_MAIL_PORT: ${MAIL_PORT:-1025}
+      SPRING_MAIL_USERNAME: ${MAIL_USERNAME:-}
+      SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: ${MAIL_SMTP_AUTH:-false}
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: ${MAIL_STARTTLS:-false}
 
-      # Spring Profile
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-docker}
 
-      # Java Options
-      JAVA_OPTS: "-Xmx1g -Xms512m"
+      JAVA_OPTS: ${JAVA_OPTS:--Xmx1g -Xms512m -XX:+UseG1GC}
     networks:
       - nakacrm-network
     depends_on:
