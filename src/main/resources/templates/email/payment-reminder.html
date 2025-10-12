@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lembrete de Pagamento</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .content {
+            padding: 30px 20px;
+            color: #333333;
+        }
+        .greeting {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333333;
+        }
+        .message {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555555;
+            margin-bottom: 20px;
+        }
+        .invoice-details {
+            background-color: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .invoice-details h3 {
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            color: #333333;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #666666;
+        }
+        .detail-value {
+            color: #333333;
+        }
+        .amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 20px 0;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #777777;
+            font-size: 14px;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .highlight {
+            color: #667eea;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💳 Lembrete de Pagamento</h1>
+        </div>
+        <div class="content">
+            <p class="greeting">Olá, {{customerName}}!</p>
+
+            <p class="message">
+                Este é um lembrete amigável sobre o pagamento que vencerá em breve.
+            </p>
+
+            <div class="invoice-details">
+                <h3>Detalhes do Pagamento</h3>
+                <div class="detail-row">
+                    <span class="detail-label">Número da Fatura:</span>
+                    <span class="detail-value">{{invoiceNumber}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Data de Vencimento:</span>
+                    <span class="detail-value highlight">{{dueDate}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Descrição:</span>
+                    <span class="detail-value">{{description}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Valor Total:</span>
+                    <span class="detail-value amount">R$ {{amount}}</span>
+                </div>
+            </div>
+
+            <p class="message">
+                Para evitar juros e multas, solicitamos que efetue o pagamento até a data de vencimento.
+            </p>
+
+            <div>
+                <a href="{{paymentLink}}" class="cta-button">Realizar Pagamento</a>
+            </div>
+
+            <p class="message">
+                Se você já efetuou o pagamento, por favor desconsidere este e-mail.
+            </p>
+        </div>
+        <div class="footer">
+            <p><strong>{{companyName}}</strong></p>
+            <p>{{companyAddress}}</p>
+            <p>{{companyPhone}} | {{companyEmail}}</p>
+            <p style="margin-top: 15px; font-size: 12px;">
+                Este é um e-mail automático. Por favor, não responda.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

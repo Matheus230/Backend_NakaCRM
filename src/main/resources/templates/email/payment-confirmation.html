@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de Pagamento</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #ffffff;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .success-badge {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #28a745;
+            border-radius: 50%;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+        .content {
+            padding: 30px 20px;
+            color: #333333;
+        }
+        .greeting {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333333;
+        }
+        .message {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555555;
+            margin-bottom: 20px;
+        }
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .success-box p {
+            margin: 0;
+            color: #155724;
+            font-weight: 500;
+            font-size: 16px;
+        }
+        .payment-details {
+            background-color: #f8f9fa;
+            border-left: 4px solid #00f2fe;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .payment-details h3 {
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            color: #333333;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #666666;
+        }
+        .detail-value {
+            color: #333333;
+        }
+        .amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #28a745;
+        }
+        .receipt-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 20px 0;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        .receipt-button:hover {
+            transform: scale(1.05);
+        }
+        .info-box {
+            background-color: #e8f4f8;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .info-box h4 {
+            margin: 0 0 10px 0;
+            color: #333333;
+            font-size: 16px;
+        }
+        .info-box p {
+            margin: 5px 0;
+            color: #555555;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #777777;
+            font-size: 14px;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .thank-you {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #28a745;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✅ Pagamento Confirmado</h1>
+            <div class="success-badge">PAGO</div>
+        </div>
+        <div class="content">
+            <center>
+                <div class="success-icon">✓</div>
+            </center>
+
+            <p class="greeting">Olá, {{customerName}}!</p>
+
+            <div class="success-box">
+                <p>✅ Seu pagamento foi recebido e confirmado com sucesso!</p>
+            </div>
+
+            <p class="message">
+                Agradecemos pela sua pontualidade! O pagamento da fatura foi processado e registrado em nosso sistema.
+            </p>
+
+            <div class="payment-details">
+                <h3>Detalhes do Pagamento</h3>
+                <div class="detail-row">
+                    <span class="detail-label">Número da Fatura:</span>
+                    <span class="detail-value">{{invoiceNumber}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Data do Pagamento:</span>
+                    <span class="detail-value">{{paymentDate}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Método de Pagamento:</span>
+                    <span class="detail-value">{{paymentMethod}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Descrição:</span>
+                    <span class="detail-value">{{description}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Valor Pago:</span>
+                    <span class="detail-value amount">R$ {{amount}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Código de Confirmação:</span>
+                    <span class="detail-value" style="font-family: monospace; color: #28a745;">{{confirmationCode}}</span>
+                </div>
+            </div>
+
+            <center>
+                <a href="{{receiptLink}}" class="receipt-button">📄 Baixar Recibo</a>
+            </center>
+
+            <div class="info-box">
+                <h4>ℹ️ Informações Importantes</h4>
+                <p>• O comprovante de pagamento está disponível para download.</p>
+                <p>• Guarde o código de confirmação para referência futura.</p>
+                <p>• Este pagamento será refletido em seu extrato em até 2 dias úteis.</p>
+                <p>• Em caso de dúvidas, entre em contato conosco informando o código de confirmação.</p>
+            </div>
+
+            <p class="thank-you">
+                🎉 Obrigado por manter suas obrigações em dia!
+            </p>
+
+            <p class="message" style="text-align: center; font-size: 14px; color: #777;">
+                Valorizamos muito sua confiança e parceria.
+            </p>
+        </div>
+        <div class="footer">
+            <p><strong>{{companyName}}</strong></p>
+            <p>{{companyAddress}}</p>
+            <p>{{companyPhone}} | {{companyEmail}}</p>
+            <p style="margin-top: 15px; font-size: 12px;">
+                Este é um e-mail automático. Por favor, não responda.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

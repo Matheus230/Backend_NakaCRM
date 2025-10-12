@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de Cadastro - {{companyName}}</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 20px 0;">
+        <tr>
+            <td align="center">
+                <!-- Container Principal -->
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+
+                    <!-- Header com gradiente -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600;">
+                                Obrigado pelo seu interesse!
+                            </h1>
+                            <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px; opacity: 0.95;">
+                                Recebemos suas informações com sucesso
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Corpo do Email -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <p style="margin: 0 0 20px 0; font-size: 16px; color: #333333; line-height: 1.6;">
+                                Olá <strong>{{customerName}}</strong>,
+                            </p>
+
+                            <p style="margin: 0 0 20px 0; font-size: 16px; color: #333333; line-height: 1.6;">
+                                Agradecemos por demonstrar interesse em nossos produtos e serviços!
+                                Recebemos suas informações e estamos muito empolgados em poder ajudá-lo(a).
+                            </p>
+
+                            <!-- Box de Informações -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8f9fa; border-left: 4px solid #667eea; border-radius: 5px; margin: 25px 0;">
+                                <tr>
+                                    <td style="padding: 20px;">
+                                        <h3 style="margin: 0 0 15px 0; color: #2c3e50; font-size: 18px;">
+                                            📋 Resumo das suas informações:
+                                        </h3>
+                                        <table width="100%" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="padding: 5px 0; color: #666666; font-size: 14px;">
+                                                    <strong>Nome:</strong>
+                                                </td>
+                                                <td style="padding: 5px 0; color: #333333; font-size: 14px;">
+                                                    {{customerName}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 5px 0; color: #666666; font-size: 14px;">
+                                                    <strong>Email:</strong>
+                                                </td>
+                                                <td style="padding: 5px 0; color: #333333; font-size: 14px;">
+                                                    {{customerEmail}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 5px 0; color: #666666; font-size: 14px;">
+                                                    <strong>Telefone:</strong>
+                                                </td>
+                                                <td style="padding: 5px 0; color: #333333; font-size: 14px;">
+                                                    {{customerPhone}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 5px 0; color: #666666; font-size: 14px;">
+                                                    <strong>Produto de Interesse:</strong>
+                                                </td>
+                                                <td style="padding: 5px 0; color: #333333; font-size: 14px;">
+                                                    {{productName}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 5px 0; color: #666666; font-size: 14px;">
+                                                    <strong>Preferência de Contato:</strong>
+                                                </td>
+                                                <td style="padding: 5px 0; color: #333333; font-size: 14px;">
+                                                    {{contactPreference}}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Próximos Passos -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="background: linear-gradient(135deg, #e0f7fa 0%, #e1bee7 100%); border-radius: 8px; margin: 25px 0;">
+                                <tr>
+                                    <td style="padding: 25px;">
+                                        <h3 style="margin: 0 0 15px 0; color: #2c3e50; font-size: 18px;">
+                                            🚀 Próximos Passos:
+                                        </h3>
+                                        <ul style="margin: 0; padding-left: 20px; color: #333333; line-height: 1.8;">
+                                            <li style="margin-bottom: 10px;">
+                                                Nossa equipe comercial analisará suas informações
+                                            </li>
+                                            <li style="margin-bottom: 10px;">
+                                                Entraremos em contato dentro de <strong>24 horas úteis</strong>
+                                            </li>
+                                            <li style="margin-bottom: 10px;">
+                                                Prepararemos uma proposta personalizada para você
+                                            </li>
+                                            <li>
+                                                Tiraremos todas as suas dúvidas sobre nossos produtos
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin: 25px 0 20px 0; font-size: 16px; color: #333333; line-height: 1.6;">
+                                Enquanto isso, caso tenha alguma dúvida urgente, não hesite em nos contatar:
+                            </p>
+
+                            <!-- Botões de Contato -->
+                            <table width="100%" cellpadding="0" cellspacing="0" style="margin: 20px 0;">
+                                <tr>
+                                    <td align="center">
+                                        <table cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td style="padding: 0 10px;">
+                                                    <a href="mailto:{{companyEmail}}" style="display: inline-block; padding: 12px 25px; background-color: #667eea; color: #ffffff; text-decoration: none; border-radius: 5px; font-size: 14px; font-weight: 600;">
+                                                        📧 Enviar Email
+                                                    </a>
+                                                </td>
+                                                <td style="padding: 0 10px;">
+                                                    <a href="tel:{{companyPhone}}" style="display: inline-block; padding: 12px 25px; background-color: #28a745; color: #ffffff; text-decoration: none; border-radius: 5px; font-size: 14px; font-weight: 600;">
+                                                        📞 Ligar Agora
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <p style="margin: 30px 0 0 0; font-size: 16px; color: #333333; line-height: 1.6;">
+                                Estamos ansiosos para iniciar essa parceria!
+                            </p>
+
+                            <p style="margin: 20px 0 0 0; font-size: 16px; color: #333333;">
+                                Atenciosamente,<br>
+                                <strong style="color: #667eea;">Equipe {{companyName}}</strong>
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #2c3e50; padding: 30px; text-align: center;">
+                            <p style="margin: 0 0 10px 0; color: #ffffff; font-size: 16px; font-weight: 600;">
+                                {{companyName}}
+                            </p>
+                            <p style="margin: 0 0 5px 0; color: #b0bec5; font-size: 14px;">
+                                📍 {{companyAddress}}
+                            </p>
+                            <p style="margin: 0 0 5px 0; color: #b0bec5; font-size: 14px;">
+                                📞 {{companyPhone}} | 📧 {{companyEmail}}
+                            </p>
+                            <p style="margin: 15px 0 0 0; color: #78909c; font-size: 12px;">
+                                © {{currentYear}} {{companyName}}. Todos os direitos reservados.
+                            </p>
+                            <p style="margin: 10px 0 0 0; color: #78909c; font-size: 11px;">
+                                Este email foi enviado automaticamente. Por favor, não responda diretamente a este email.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

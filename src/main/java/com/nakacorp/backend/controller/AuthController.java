@@ -1,11 +1,14 @@
 package com.nakacorp.backend.controller;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.nakacorp.backend.dto.req.GoogleLoginRequestDto;
 import com.nakacorp.backend.dto.req.LoginRequestDto;
 import com.nakacorp.backend.dto.req.UsuarioRequestDto;
 import com.nakacorp.backend.dto.res.ApiResponseDto;
 import com.nakacorp.backend.dto.res.UsuarioResponseDto;
 import com.nakacorp.backend.model.Usuario;
 import com.nakacorp.backend.security.JwtTokenProvider;
+import com.nakacorp.backend.service.OAuth2Service;
 import com.nakacorp.backend.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -44,6 +47,7 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final UsuarioService usuarioService;
     private final com.nakacorp.backend.security.LoginAttemptService loginAttemptService;
+    private final OAuth2Service oauth2Service;
 
     /**
      * Construtor com injeção de dependências.
@@ -52,17 +56,20 @@ public class AuthController {
      * @param jwtTokenProvider      provedor de tokens JWT
      * @param usuarioService        serviço de gerenciamento de usuários
      * @param loginAttemptService   serviço de controle de tentativas de login
+     * @param oauth2Service         serviço de autenticação OAuth2
      */
     @Autowired
     public AuthController(
             AuthenticationManager authenticationManager,
             JwtTokenProvider jwtTokenProvider,
             UsuarioService usuarioService,
-            com.nakacorp.backend.security.LoginAttemptService loginAttemptService) {
+            com.nakacorp.backend.security.LoginAttemptService loginAttemptService,
+            OAuth2Service oauth2Service) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.usuarioService = usuarioService;
         this.loginAttemptService = loginAttemptService;
+        this.oauth2Service = oauth2Service;
     }
 
     /**
@@ -257,6 +264,63 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponseDto.error("Erro ao realizar logout: " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Realiza o login com Google OAuth2.
+     * <p>
+     * Valida o token ID do Google, verifica se o email foi confirmado,
+     * e cria ou atualiza o usuário no banco de dados. Retorna tokens JWT
+     * para autenticação na aplicação.
+     * </p>
+     *
+     * @param request contém o token ID do Google
+     * @return ResponseEntity contendo tokens JWT e dados do usuário
+     */
+    @PostMapping("/google")
+    @Operation(summary = "Login com Google", description = "Autentica um usuário usando Google OAuth2 e retorna tokens JWT")
+    public ResponseEntity<ApiResponseDto<Map<String, Object>>> googleLogin(
+            @Parameter(description = "Token ID do Google")
+            @RequestBody @Valid GoogleLoginRequestDto request) {
+
+        try {
+            GoogleIdToken.Payload payload = oauth2Service.verifyGoogleToken(request.idToken());
+
+            if (!oauth2Service.isEmailVerified(payload)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(ApiResponseDto.error("Email não verificado pelo Google"));
+            }
+
+            String googleId = oauth2Service.getGoogleIdFromPayload(payload);
+            String email = oauth2Service.getEmailFromPayload(payload);
+            String nome = oauth2Service.getNameFromPayload(payload);
+
+            Usuario usuario = usuarioService.findOrCreateGoogleUser(googleId, email, nome);
+
+            if (!usuario.getAtivo()) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(ApiResponseDto.error("Usuário desativado. Entre em contato com o administrador."));
+            }
+
+            String accessToken = jwtTokenProvider.generateToken(usuario);
+            String refreshToken = jwtTokenProvider.generateRefreshToken(usuario);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("accessToken", accessToken);
+            response.put("refreshToken", refreshToken);
+            response.put("tokenType", "Bearer");
+            response.put("expiresIn", jwtTokenProvider.getExpirationTimeInSeconds());
+            response.put("usuario", UsuarioResponseDto.fromEntity(usuario));
+
+            return ResponseEntity.ok(ApiResponseDto.success("Login com Google realizado com sucesso", response));
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponseDto.error(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponseDto.error("Erro ao realizar login com Google: " + e.getMessage()));
         }
     }
 }

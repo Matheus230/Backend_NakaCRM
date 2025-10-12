@@ -102,4 +102,36 @@ public class UsuarioService {
         usuario.setAtivo(false);
         usuarioRepository.save(usuario);
     }
+
+    /**
+     * Busca um usuário pelo Google ID ou cria um novo se não existir.
+     *
+     * @param googleId Google ID do usuário
+     * @param email Email do usuário
+     * @param nome Nome do usuário
+     * @return Usuário encontrado ou criado
+     */
+    public Usuario findOrCreateGoogleUser(String googleId, String email, String nome) {
+        Optional<Usuario> usuarioByGoogleId = usuarioRepository.findByGoogleId(googleId);
+        if (usuarioByGoogleId.isPresent()) {
+            return usuarioByGoogleId.get();
+        }
+
+        Optional<Usuario> usuarioByEmail = usuarioRepository.findByEmail(email);
+        if (usuarioByEmail.isPresent()) {
+            Usuario usuario = usuarioByEmail.get();
+            usuario.setGoogleId(googleId);
+            return usuarioRepository.save(usuario);
+        }
+
+        Usuario novoUsuario = new Usuario();
+        novoUsuario.setNome(nome);
+        novoUsuario.setEmail(email);
+        novoUsuario.setGoogleId(googleId);
+        novoUsuario.setSenhaHash(passwordEncoder.encode(java.util.UUID.randomUUID().toString()));
+        novoUsuario.setTipoUsuario(com.nakacorp.backend.model.enums.TipoUsuario.VENDEDOR);
+        novoUsuario.setAtivo(true);
+
+        return usuarioRepository.save(novoUsuario);
+    }
 }
