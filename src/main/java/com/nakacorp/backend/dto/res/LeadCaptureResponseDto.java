@@ -32,7 +32,7 @@ public record LeadCaptureResponseDto(
     public static LeadCaptureResponseDto from(
             Long clienteId,
             String nome,
-            String email,
+            String email
     ) {
         return new LeadCaptureResponseDto(
                 clienteId,

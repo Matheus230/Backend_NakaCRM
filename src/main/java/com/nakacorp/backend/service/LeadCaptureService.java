@@ -3,13 +3,9 @@ package com.nakacorp.backend.service;
 import com.nakacorp.backend.dto.req.LeadCaptureRequestDto;
 import com.nakacorp.backend.dto.res.LeadCaptureResponseDto;
 import com.nakacorp.backend.model.Cliente;
-import com.nakacorp.backend.model.ClienteInteresse;
-import com.nakacorp.backend.model.Produto;
-import com.nakacorp.backend.model.enums.NivelInteresse;
 import com.nakacorp.backend.model.enums.OrigemLead;
 import com.nakacorp.backend.model.enums.StatusLead;
 import com.nakacorp.backend.repository.ClienteRepository;
-import com.nakacorp.backend.repository.ProdutoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,7 +137,7 @@ public class LeadCaptureService {
         return LeadCaptureResponseDto.from(
                 cliente.getId(),
                 cliente.getNome(),
-                cliente.getEmail(),
+                cliente.getEmail()
         );
     }
 
