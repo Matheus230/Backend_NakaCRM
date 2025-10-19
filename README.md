@@ -210,10 +210,10 @@ git clone https://github.com/nakacorp/backend-nakacrm.git
 cd backend-nakacrm
 
 # 2. Configure variáveis de ambiente
-cp .env.example .env
+cp ..env ..env
 
 # 3. Gere um JWT secret forte
-echo "JWT_SECRET=$(openssl rand -hex 64)" >> .env
+echo "JWT_SECRET=$(openssl rand -hex 64)" >> ..env
 
 # 4. Inicie o banco de dados e serviços
 docker-compose up -d
