@@ -56,12 +56,32 @@ public class EmailService {
     @Value("${app.company.email:contato@nakacorp.com}")
     private String companyEmail;
 
+    @Value("${spring.mail.password:}")
+    private String mailPassword;
+
     /**
      * Retorna o email que deve ser usado como remetente.
      * Usa o spring.mail.username se configurado, caso contrário usa o email da empresa.
      */
     private String getFromEmail() {
         return (mailUsername != null && !mailUsername.isEmpty()) ? mailUsername : companyEmail;
+    }
+
+    /**
+     * Verifica se as configurações de email estão válidas.
+     *
+     * @return true se as configurações estão OK, false caso contrário
+     */
+    private boolean isEmailConfigured() {
+        boolean configured = mailUsername != null && !mailUsername.isEmpty()
+                          && mailPassword != null && !mailPassword.isEmpty();
+
+        if (!configured) {
+            logger.warn("Configurações de email não encontradas. Configure MAIL_USERNAME e MAIL_PASSWORD.");
+            logger.warn("Para Gmail, gere uma senha de app em: https://myaccount.google.com/apppasswords");
+        }
+
+        return configured;
     }
 
     @Autowired
@@ -320,6 +340,14 @@ public class EmailService {
     }
 
     public void enviarEmailSimples(String destinatario, String assunto, String mensagem) {
+        // Valida se o email está configurado
+        if (!isEmailConfigured()) {
+            logger.error("Não é possível enviar email. Credenciais SMTP não configuradas.");
+            throw new IllegalStateException(
+                "Configurações de email ausentes. Configure MAIL_USERNAME e MAIL_PASSWORD nas variáveis de ambiente."
+            );
+        }
+
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(getFromEmail());
@@ -329,13 +357,28 @@ public class EmailService {
 
             mailSender.send(message);
             logger.info("Email simples enviado para: {}", destinatario);
+        } catch (org.springframework.mail.MailAuthenticationException e) {
+            logger.error("Erro de autenticação SMTP. Verifique MAIL_USERNAME e MAIL_PASSWORD");
+            throw new RuntimeException("Falha na autenticação com servidor de email: " + e.getMessage(), e);
+        } catch (org.springframework.mail.MailSendException e) {
+            logger.error("Erro de conexão com servidor SMTP: {}", e.getMessage());
+            throw new RuntimeException("Não foi possível conectar ao servidor de email.", e);
         } catch (Exception e) {
             logger.error("Erro ao enviar email simples para: {}", destinatario, e);
-            throw new RuntimeException("Falha ao enviar email", e);
+            throw new RuntimeException("Falha ao enviar email: " + e.getMessage(), e);
         }
     }
 
     public void enviarEmailHtml(String destinatario, String assunto, String corpoHtml) {
+        // Valida se o email está configurado
+        if (!isEmailConfigured()) {
+            logger.error("Não é possível enviar email. Credenciais SMTP não configuradas.");
+            logger.error("Configure as variáveis de ambiente MAIL_USERNAME e MAIL_PASSWORD");
+            throw new IllegalStateException(
+                "Configurações de email ausentes. Configure MAIL_USERNAME e MAIL_PASSWORD nas variáveis de ambiente."
+            );
+        }
+
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -346,10 +389,21 @@ public class EmailService {
             helper.setText(corpoHtml, true);
 
             mailSender.send(message);
-            logger.info("Email HTML enviado para: {}", destinatario);
+            logger.info("Email HTML enviado com sucesso para: {}", destinatario);
+        } catch (org.springframework.mail.MailAuthenticationException e) {
+            logger.error("Erro de autenticação SMTP. Verifique MAIL_USERNAME e MAIL_PASSWORD");
+            logger.error("Para Gmail, gere uma senha de app em: https://myaccount.google.com/apppasswords");
+            throw new RuntimeException("Falha na autenticação com servidor de email: " + e.getMessage(), e);
+        } catch (org.springframework.mail.MailSendException e) {
+            logger.error("Erro de conexão com servidor SMTP: {}", e.getMessage());
+            logger.error("Verifique: 1) Conexão com internet, 2) Firewall, 3) Configurações SMTP");
+            throw new RuntimeException("Não foi possível conectar ao servidor de email. Verifique a conexão e as configurações SMTP.", e);
         } catch (MessagingException e) {
             logger.error("Erro ao enviar email HTML para: {}", destinatario, e);
-            throw new RuntimeException("Falha ao enviar email HTML", e);
+            throw new RuntimeException("Falha ao enviar email HTML: " + e.getMessage(), e);
+        } catch (Exception e) {
+            logger.error("Erro inesperado ao enviar email para: {}", destinatario, e);
+            throw new RuntimeException("Erro ao enviar email: " + e.getMessage(), e);
         }
     }
 

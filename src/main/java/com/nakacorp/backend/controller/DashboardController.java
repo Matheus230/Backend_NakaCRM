@@ -1,8 +1,6 @@
 package com.nakacorp.backend.controller;
 
-import com.nakacorp.backend.dto.res.ApiResponseDto;
-import com.nakacorp.backend.dto.res.DashboardStatsDto;
-import com.nakacorp.backend.dto.res.LeadConversionDto;
+import com.nakacorp.backend.dto.res.*;
 import com.nakacorp.backend.model.Cliente;
 import com.nakacorp.backend.service.DashboardService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -108,5 +106,94 @@ public class DashboardController {
     public ResponseEntity<ApiResponseDto<List<Cliente>>> getLeadsHotToday() {
         List<Cliente> leads = dashboardService.getLeadsHotToday();
         return ResponseEntity.ok(ApiResponseDto.success(leads));
+    }
+
+    /**
+     * Endpoint principal para a tela home do dashboard.
+     * Retorna todos os dados consolidados necessários para a página inicial.
+     *
+     * @return ResponseEntity contendo todas as métricas do dashboard
+     */
+    @GetMapping("/home")
+    @Operation(
+            summary = "Dashboard Home Completo",
+            description = "Retorna todas as informações consolidadas para a tela home: " +
+                    "receita total, estatísticas gerais, pipeline de vendas, próximas interações, " +
+                    "taxa de conversão e leads ativos"
+    )
+    @PreAuthorize("hasRole('ADMIN') or hasRole('VENDEDOR')")
+    public ResponseEntity<ApiResponseDto<DashboardHomeDto>> getDashboardHome() {
+        DashboardHomeDto dashboardHome = dashboardService.getDashboardHome();
+        return ResponseEntity.ok(ApiResponseDto.success("Dashboard carregado com sucesso", dashboardHome));
+    }
+
+    /**
+     * Retorna métricas detalhadas de receita do CRM.
+     *
+     * @return ResponseEntity contendo informações de receita total, mensal, anual e potencial
+     */
+    @GetMapping("/receita")
+    @Operation(
+            summary = "Métricas de Receita",
+            description = "Retorna receita total, receita mensal/anual recorrente, " +
+                    "receita potencial, total de vendas e ticket médio"
+    )
+    @PreAuthorize("hasRole('ADMIN') or hasRole('VENDEDOR')")
+    public ResponseEntity<ApiResponseDto<ReceitaTotalDto>> getReceitaTotal() {
+        ReceitaTotalDto receita = dashboardService.getReceitaTotal();
+        return ResponseEntity.ok(ApiResponseDto.success(receita));
+    }
+
+    /**
+     * Retorna visão geral do pipeline de vendas.
+     * Mostra quantidade de leads e valor potencial em cada estágio do funil.
+     *
+     * @return ResponseEntity contendo lista de status com métricas
+     */
+    @GetMapping("/pipeline")
+    @Operation(
+            summary = "Pipeline de Vendas",
+            description = "Retorna visão geral do funil de vendas com quantidade de leads, " +
+                    "valor potencial e percentual em cada estágio"
+    )
+    @PreAuthorize("hasRole('ADMIN') or hasRole('VENDEDOR')")
+    public ResponseEntity<ApiResponseDto<List<PipelineStatusDto>>> getPipelineVendas() {
+        List<PipelineStatusDto> pipeline = dashboardService.getPipelineVendas();
+        return ResponseEntity.ok(ApiResponseDto.success(pipeline));
+    }
+
+    /**
+     * Retorna próximas tarefas e reuniões agendadas.
+     *
+     * @return ResponseEntity contendo lista de interações futuras
+     */
+    @GetMapping("/proximas-interacoes")
+    @Operation(
+            summary = "Próximas Tarefas e Reuniões",
+            description = "Retorna lista de próximas interações agendadas, incluindo " +
+                    "reuniões, ligações e follow-ups prioritários"
+    )
+    @PreAuthorize("hasRole('ADMIN') or hasRole('VENDEDOR')")
+    public ResponseEntity<ApiResponseDto<List<ProximaInteracaoDto>>> getProximasInteracoes() {
+        List<ProximaInteracaoDto> proximasInteracoes = dashboardService.getProximasInteracoes();
+        return ResponseEntity.ok(ApiResponseDto.success(proximasInteracoes));
+    }
+
+    /**
+     * Retorna contagem de leads ativos no sistema.
+     * Leads ativos são aqueles que não estão nos status CLIENTE ou PERDIDO.
+     *
+     * @return ResponseEntity contendo número de leads ativos
+     */
+    @GetMapping("/leads-ativos")
+    @Operation(
+            summary = "Total de Leads Ativos",
+            description = "Retorna a contagem de leads que ainda estão no funil de vendas " +
+                    "(excluindo clientes convertidos e leads perdidos)"
+    )
+    @PreAuthorize("hasRole('ADMIN') or hasRole('VENDEDOR')")
+    public ResponseEntity<ApiResponseDto<Long>> getLeadsAtivos() {
+        long leadsAtivos = dashboardService.getDashboardHome().leadsAtivos();
+        return ResponseEntity.ok(ApiResponseDto.success(leadsAtivos));
     }
 }

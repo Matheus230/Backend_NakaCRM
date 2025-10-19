@@ -77,4 +77,28 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     @Query("SELECT COUNT(c) FROM Cliente c WHERE c.statusLead = :status")
     long countByStatusLead(@Param("status") StatusLead status);
+
+    /**
+     * Conta leads ativos (excluindo CLIENTE e PERDIDO).
+     *
+     * @return Número de leads ativos no sistema
+     */
+    @Query("SELECT COUNT(c) FROM Cliente c WHERE c.statusLead NOT IN ('CLIENTE', 'PERDIDO')")
+    long countLeadsAtivos();
+
+    /**
+     * Busca clientes convertidos (status CLIENTE) para cálculo de receita.
+     *
+     * @return Lista de clientes convertidos
+     */
+    @Query("SELECT c FROM Cliente c LEFT JOIN FETCH c.interesses i LEFT JOIN FETCH i.produto WHERE c.statusLead = 'CLIENTE'")
+    List<Cliente> findClientesConvertidosComInteresses();
+
+    /**
+     * Busca todos os clientes com seus interesses para cálculo de pipeline.
+     *
+     * @return Lista de clientes com interesses carregados
+     */
+    @Query("SELECT c FROM Cliente c LEFT JOIN FETCH c.interesses i LEFT JOIN FETCH i.produto WHERE c.statusLead NOT IN ('PERDIDO')")
+    List<Cliente> findClientesComInteressesParaPipeline();
 }

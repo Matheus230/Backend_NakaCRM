@@ -27,4 +27,20 @@ public interface InteracaoClienteRepository extends JpaRepository<InteracaoClien
 
     @Query("SELECT i FROM InteracaoCliente i WHERE i.cliente.id = :clienteId AND i.createdAt BETWEEN :inicio AND :fim ORDER BY i.createdAt DESC")
     List<InteracaoCliente> findByClienteIdAndCreatedAtBetween(@Param("clienteId") Long clienteId, @Param("inicio") LocalDateTime inicio, @Param("fim") LocalDateTime fim);
+
+    /**
+     * Busca próximas interações agendadas (baseado em dados_extras com campo 'dataAgendada').
+     * Como próximas tarefas são armazenadas em JSONB, esta query busca interações recentes
+     * que possam conter informações de agendamento futuro.
+     *
+     * @param dataLimite Data limite para considerar interações
+     * @return Lista de interações com potencial de agendamento
+     */
+    @Query("SELECT i FROM InteracaoCliente i " +
+           "LEFT JOIN FETCH i.cliente c " +
+           "LEFT JOIN FETCH i.usuario u " +
+           "WHERE i.tipoInteracao IN ('TELEFONE', 'EMAIL') " +
+           "AND i.createdAt >= :dataLimite " +
+           "ORDER BY i.createdAt ASC")
+    List<InteracaoCliente> findProximasInteracoes(@Param("dataLimite") LocalDateTime dataLimite);
 }
