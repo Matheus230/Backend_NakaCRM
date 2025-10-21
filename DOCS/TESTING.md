@@ -55,9 +55,7 @@ docker exec -i crm-postgres psql -U crm_user -d crm_db < mock-data.sql
 
 | Email | Senha | Tipo | Descrição |
 |-------|-------|------|-----------|
-| `admin@nakacorp.com` | `senha123` | ADMIN | Administrador com acesso total |
-| `joao@nakacorp.com` | `senha123` | VENDEDOR | Vendedor João |
-| `maria@nakacorp.com` | `senha123` | VENDEDOR | Vendedora Maria |
+| `admcrm@email.com` | `pass12345678` | ADMIN | Administrador com acesso total |
 
 ### Clientes por Status
 
